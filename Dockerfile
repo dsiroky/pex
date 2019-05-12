@@ -13,5 +13,9 @@ RUN \
       libswscale-dev \
       scons
 
+RUN groupadd -g 1000 johndoe
+RUN useradd -u 1000 -g johndoe -m -d /home/johndoe johndoe
+USER johndoe
+
 ENV SCONSFLAGS "-u -j4"
 WORKDIR "/tmp/medianizer"

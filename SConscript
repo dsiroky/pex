@@ -8,6 +8,8 @@ for cmd in ("CC", "CXX"):
 env.AppendUnique(
         CPPPATH=[
             "#src",
+            "#googletest/googletest",
+            "#googletest/googletest/include",
         ],
         CCFLAGS=[
             "-pedantic",
@@ -28,6 +30,13 @@ env.AppendUnique(
             "avutil",
             "swscale",
         ],
+        LINKFLAGS=[
+            "-pthread",
+        ],
     )
 
-env.Program("medianizer", Glob("src/*.cpp") + Glob("src/medianizer/*.cpp"))
+gtest = Glob("googletest/googletest/src/gtest-all.cc")
+
+lib = env.StaticLibrary(Glob("src/medianizer/*.cpp"))
+env.Program("medianizer", Glob("src/*.cpp") + lib)
+env.Program("test", Glob("tests/*.cpp") + gtest + lib)

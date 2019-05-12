@@ -20,6 +20,7 @@ env.AppendUnique(
             "-Wno-deprecated-declarations",
 
             "-fdiagnostics-color=always",
+            "-O3",
         ],
         CXXFLAGS=[
             "-std=c++17",
@@ -29,6 +30,7 @@ env.AppendUnique(
             "avformat",
             "avutil",
             "swscale",
+            "boost_program_options",
         ],
         LINKFLAGS=[
             "-pthread",
@@ -37,6 +39,6 @@ env.AppendUnique(
 
 gtest = Glob("googletest/googletest/src/gtest-all.cc")
 
-lib = env.StaticLibrary(Glob("src/medianizer/*.cpp"))
+lib = env.StaticLibrary("medianizer", Glob("src/medianizer/*.cpp"))
 env.Program("medianizer", Glob("src/*.cpp") + lib)
 env.Program("test", Glob("tests/*.cpp") + gtest + lib)

@@ -30,7 +30,8 @@ static int check_av_call(const std::string& prefix, const int ret)
 
 //--------------------------------------------------------------------------
 
-void process_file(const std::string& infile)
+void process_file(const std::string& infile,
+                  const std::function<void(const Frame&)> frame_callback)
 {
   // This rubbish code is copied (and altered) from
   // https://gist.github.com/yohhoy/f0444d3fc47f2bb2d0e2.
@@ -65,6 +66,11 @@ void process_file(const std::string& infile)
   // initialize sample scaler
   const int dst_width = vstrm->codec->width;
   const int dst_height = vstrm->codec->height;
+  if ((dst_width <= 0) or (dst_height <= 0))
+  {
+    throw std::runtime_error{"zero video resolution"};
+  }
+
   // TTTTTTTTTTTT
   const AVPixelFormat dst_pix_fmt = AV_PIX_FMT_GRAY8;
   SwsContext* swsctx = sws_getCachedContext(
@@ -123,6 +129,10 @@ void process_file(const std::string& infile)
                   frame->data, frame->linesize);
         const double timestamp = (frame->pts == AV_NOPTS_VALUE) ? nb_frames * time_base
                                                                 : frame->pts * time_base;
+        const Frame frame{
+          timestamp, dst_width, dst_height, framebuf
+        };
+        frame_callback(frame);
       }
     }
     ++nb_frames;

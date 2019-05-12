@@ -115,6 +115,8 @@ void frame_medians(const Frame& frame, const int grid_width, const int grid_heig
       median_callback(median(gsl::span<uint8_t>{bin.values.data(), bin_size}));
     }
   }
+
+  assert(frame_iter == frame.data.cend());
 }
 
 //==========================================================================

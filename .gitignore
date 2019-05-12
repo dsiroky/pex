@@ -1,0 +1,6 @@
+.sconsign*
+*.o
+*.mp4
+*.avi
+*.webm
+/build

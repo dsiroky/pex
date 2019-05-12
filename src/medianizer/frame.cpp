@@ -54,6 +54,7 @@ void frame_medians(const Frame& frame, const int grid_width, const int grid_heig
     throw std::invalid_argument{"grid dimensions are too small"};
   }
 
+  // Precalculate offsets.
   const auto horizontal_seams = grid_seams(frame.width, grid_width);
   const auto vertical_seams = grid_seams(frame.height, grid_height);
 
@@ -61,6 +62,7 @@ void frame_medians(const Frame& frame, const int grid_width, const int grid_heig
   // much as possible.
   // Medians will be calculated in bulks by grid rows.
 
+  // Single grid cell in a grid row.
   struct Bin
   {
     using Values = std::vector<uint8_t>;
@@ -74,7 +76,6 @@ void frame_medians(const Frame& frame, const int grid_width, const int grid_heig
   for (int grid_column_idx{0}; grid_column_idx < grid_width; ++grid_column_idx)
   {
     bins.push_back(Bin{});
-    // Precalculate column offsets.
     bins.back().seam = horizontal_seams[grid_column_idx];
     // Preallocate memory for the largest cell.
     bins.back().values.resize((frame.width / grid_width + 1)
@@ -84,7 +85,7 @@ void frame_medians(const Frame& frame, const int grid_width, const int grid_heig
   auto frame_iter = frame.data.cbegin();
   for (const auto& vseam: vertical_seams)
   {
-    // reset bins
+    // reset bin pointers
     for (auto& bin: bins)
     {
       bin.values_iter = bin.values.begin();
@@ -93,7 +94,7 @@ void frame_medians(const Frame& frame, const int grid_width, const int grid_heig
     // fill bins
     for (int row{vseam.first}; row <= vseam.last; ++row)
     {
-      int column_idx{};
+      int column_idx{0};
       for (auto& bin: bins)
       {
         while (column_idx <= bin.seam.last)

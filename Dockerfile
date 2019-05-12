@@ -4,12 +4,13 @@ RUN \
   apt-get update && \
   apt-get -y --no-install-recommends install \
       g++ \
-      libboost-dev \
       libavcodec-dev \
       libavformat-dev \
       libavutil-dev \
-      libswscale-dev \
+      libboost-program-options-dev \
       libfmt-dev \
+      libmsgsl-dev \
+      libswscale-dev \
       scons
 
 ENV SCONSFLAGS "-u -j4"

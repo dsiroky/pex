@@ -1,4 +1,4 @@
-# PEX task
+# Pex task
 
 ## Prerequisites
   * docker

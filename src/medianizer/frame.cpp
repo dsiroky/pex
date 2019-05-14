@@ -97,13 +97,11 @@ void frame_medians(const Frame& frame, const int grid_width, const int grid_heig
       int column_idx{0};
       for (auto& bin: bins)
       {
-        while (column_idx <= bin.seam.last)
-        {
-          *bin.values_iter = *frame_iter;
-          ++column_idx;
-          ++frame_iter;
-          ++bin.values_iter;
-        }
+        const auto columns_count = bin.seam.last - column_idx + 1;
+        std::copy(frame_iter, frame_iter + columns_count, bin.values_iter);
+        column_idx += columns_count;
+        frame_iter += columns_count;
+        bin.values_iter += columns_count;
       }
     }
 

@@ -14,7 +14,7 @@ namespace medianizer {
 uint8_t median(const gsl::span<uint8_t> data)
 {
   assert(data.size() > 0);
-  std::partial_sort(data.begin(), data.begin() + data.size() / 2 + 1, data.end());
+  std::nth_element(data.begin(), data.begin() + data.size() / 2, data.end());
   return data[data.size() / 2];
 }
 
